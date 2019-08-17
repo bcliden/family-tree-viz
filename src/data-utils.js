@@ -30,16 +30,36 @@ export function parseCSV(path) {
 export function hydratePeople(parsedFile) {
   // expect input { members[], relations[] }
   const { members, relations } = parsedFile;
-  let complexMembers = [...members.map(row => ({ ...row, relations: [] }))];
+  // let complexMembers = [...members.map(addRelationsArray)];
+  let complexMembers = [...members];
   relations.forEach(row => {
     // row: { id, relation, id2 }
     const from = members.indexOf(members.find(d => d.Id == row.Id)); // ugly way to get the index of a given ID
     const to = members.indexOf(members.find(d => d.Id == row.Id2));
-    // here, I push the relation + its target into a relations array on the member
-    complexMembers[from].relations.push({
-      relation: row.Relation,
-      member: complexMembers[to]
-    });
+    const relation = getRelation(row.Relation.toLowerCase());
+
+    // here, I push the relation + its target onto the member
+    if (!complexMembers[from][relation]) {
+      // if the given filed doesn't exist
+      complexMembers[from][relation] = [];
+    }
+    // push member of that relation
+    complexMembers[from][relation].push(complexMembers[to]);
   });
   return complexMembers;
+}
+
+function addRelationsArray(row) {
+  return { ...row, relations: [] };
+}
+
+function getRelation(relation) {
+  switch (relation) {
+    case "parent of":
+      return "children";
+    case "spouse of":
+      return "spouse";
+    default:
+      return null;
+  }
 }

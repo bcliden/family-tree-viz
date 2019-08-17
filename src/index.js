@@ -1,4 +1,5 @@
 import { parseCSV, hydratePeople } from "./data-utils";
+import { drawChart } from "./chart";
 
 async function main() {
   /* 
@@ -9,9 +10,17 @@ async function main() {
   const textFile = await parseCSV("static/simpsons.csv");
   // build complex relations
   const familyMembers = await hydratePeople(textFile);
-  console.log(familyMembers);
-  /* 
-    this outputs a nice complex object like: 
+  // see comment @ bottom for structure of familyMembers
+  // console.log(familyMembers);
+  console.log("total family chart: ", familyMembers);
+  drawChart(familyMembers);
+}
+
+main();
+
+/* 
+  familyMembers structure:
+
     {
     "Id": "1",
     "Name": "Homer Simpson",
@@ -100,6 +109,3 @@ async function main() {
   ]
 }
   */
-}
-
-main();
