@@ -11,7 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "d3": "^5.9.7",
-    "papaparse": "^5.0.2"
+    "papaparse": "^5.2.0"
   },
   "devDependencies": {
     "webpack": "^4.39.2",
